@@ -1,3 +1,4 @@
+import Tweet from 'components/Tweet';
 import { dbService } from 'fbase';
 import React, { useEffect, useState } from 'react'
 
@@ -16,7 +17,10 @@ const Home = ({userObj}) => {
     }*/
 
     useEffect(() => {
-        dbService.collection("tweets").onSnapshot(snapshot => {
+        dbService
+        .collection("tweets")
+        .orderBy("createAt","desc")
+        .onSnapshot(snapshot => {
             const tweetArray = snapshot.docs.map(doc => ({
                 id: doc.id,
                 ... doc.data()
@@ -47,7 +51,9 @@ const Home = ({userObj}) => {
                 <input type="submit" value="Tweet"/>
             </form>
             <div>
-                {tweets.map((tweet) => <div key={tweet.id}><h3>{tweet.text}</h3></div>)}
+                {tweets.map((tweet) => 
+                    <Tweet key={tweet.id} tweetObj={tweet} isOwner={tweet.creatorId === userObj.uid}/>
+                )}
             </div>
         </div>
     )
