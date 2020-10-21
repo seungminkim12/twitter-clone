@@ -29,11 +29,16 @@ function Tweet({tweetObj,isOwner}) {
            {
                editing ? 
                 <>
-                    <form onSubmit={onSubmit}>
-                        <input type="text" value={newTweet} required placeholder="Edit your Tweet!" onChange={onChange}/>
-                        <input type="submit" value="Update Tweet" />
-                    </form> 
-                    <button onClick={toggleEditing}>Cancel</button>
+                    {isOwner && ( 
+                        <>
+                        <form onSubmit={onSubmit}>
+                            <input type="text" value={newTweet} required placeholder="Edit your Tweet!" onChange={onChange}/>
+                            <input type="submit" value="Update Tweet" />
+                        </form> 
+                        <button onClick={toggleEditing}>Cancel</button>
+                        </>
+                    )
+                    }        
                 </>
                 : 
                <>
