@@ -1,10 +1,12 @@
 import Tweet from "components/Tweet";
-import { dbService } from "fbase";
+import { dbService, storageService } from "fbase";
 import React, { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 const Home = ({ userObj }) => {
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
+  const [attachment, setAttachment] = useState();
 
   /*const getTweets = async () => {
         const dbTweets = await dbService.collection("tweets").get();
@@ -32,12 +34,15 @@ const Home = ({ userObj }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    await dbService.collection("tweets").add({
+    const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
+    const response = await fileRef.putString(attachment, "data_url");
+    console.log(response);
+    /*await dbService.collection("tweets").add({
       text: tweet,
       createAt: Date.now(),
       creatorId: userObj.uid,
     });
-    setTweet("");
+    setTweet("");*/
   };
 
   const onChange = (event) => {
@@ -54,9 +59,16 @@ const Home = ({ userObj }) => {
     const theFile = files[0];
     const reader = new FileReader();
     reader.onloadend = (finishedEvent) => {
-      console.log(finishedEvent);
+      const {
+        currentTarget: { result },
+      } = finishedEvent;
+      setAttachment(result);
     };
     reader.readAsDataURL(theFile);
+  };
+
+  const onClearAttachment = () => {
+    setAttachment(null);
   };
 
   return (
@@ -71,6 +83,12 @@ const Home = ({ userObj }) => {
         />
         <input type="file" accept="image/*" onChange={onFileChange} />
         <input type="submit" value="Tweet" />
+        {attachment && (
+          <div>
+            <img src={attachment} />
+            <button onClick={onClearAttachment}>Clear</button>
+          </div>
+        )}
       </form>
       <div>
         {tweets.map((tweet) => (
