@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 const Home = ({ userObj }) => {
   const [tweet, setTweet] = useState("");
   const [tweets, setTweets] = useState([]);
-  const [attachment, setAttachment] = useState();
+  const [attachment, setAttachment] = useState("");
 
   /*const getTweets = async () => {
         const dbTweets = await dbService.collection("tweets").get();
@@ -34,15 +34,25 @@ const Home = ({ userObj }) => {
 
   const onSubmit = async (event) => {
     event.preventDefault();
-    const fileRef = storageService.ref().child(`${userObj.uid}/${uuidv4()}`);
-    const response = await fileRef.putString(attachment, "data_url");
-    console.log(response);
-    /*await dbService.collection("tweets").add({
+    let attachmentURL = "";
+    if (attachment != "") {
+      const attachmentRef = storageService
+        .ref()
+        .child(`${userObj.uid}/${uuidv4()}`);
+      const response = await attachmentRef.putString(attachment, "data_url");
+      attachmentURL = await response.ref.getDownloadURL();
+    }
+
+    const tweetObj = {
       text: tweet,
       createAt: Date.now(),
       creatorId: userObj.uid,
-    });
-    setTweet("");*/
+      attachmentURL,
+    };
+
+    await dbService.collection("tweets").add(tweetObj);
+    setTweet("");
+    setAttachment("");
   };
 
   const onChange = (event) => {
@@ -68,7 +78,7 @@ const Home = ({ userObj }) => {
   };
 
   const onClearAttachment = () => {
-    setAttachment(null);
+    setAttachment("");
   };
 
   return (
