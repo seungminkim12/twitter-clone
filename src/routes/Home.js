@@ -35,7 +35,7 @@ const Home = ({ userObj }) => {
   const onSubmit = async (event) => {
     event.preventDefault();
     let attachmentURL = "";
-    if (attachment != "") {
+    if (attachment !== "") {
       const attachmentRef = storageService
         .ref()
         .child(`${userObj.uid}/${uuidv4()}`);
@@ -95,7 +95,7 @@ const Home = ({ userObj }) => {
         <input type="submit" value="Tweet" />
         {attachment && (
           <div>
-            <img src={attachment} />
+            <img src={attachment} width="100px" height="100px" />
             <button onClick={onClearAttachment}>Clear</button>
           </div>
         )}
