@@ -13,7 +13,7 @@ export default ({ userObj }) => {
     const tweets = await dbService
       .collection("tweets")
       .where("creatorId", "==", userObj.uid)
-      .orderBy("createdA")
+      .orderBy("createdAt")
       .get();
     console.log(tweets.docs.map((doc) => doc.data()));
   };
