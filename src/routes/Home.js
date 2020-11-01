@@ -29,7 +29,7 @@ const Home = ({ userObj }) => {
           ...doc.data(),
         }));
         setTweets(tweetArray);
-        console.log(userObj);
+        console.log(tweets);
       });
   }, []);
 
