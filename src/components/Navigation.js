@@ -14,7 +14,7 @@ const Navigation = ({ userObj }) => (
       </li>
       <li>
         <Link to="/profile" style={{marginLeft:10, display="flex", flexDirection="column", alignItems="center", fontSize: 12}}>
-          {userObj.displayName ? userObj.displayName : userObj.email}'s Profile
+          {userObj.displayName ? userObj.displayName : userObj.email}s Profile
         </Link>
       </li>
     </ul>
