@@ -30,6 +30,7 @@ export default ({ refreshUser, userObj }) => {
 
   useEffect(() => {
     getMyTweets();
+    console.log(userObj.uid);
   }, []);
 
   const onChange = (event) => {
@@ -50,22 +51,31 @@ export default ({ refreshUser, userObj }) => {
   };
 
   return (
-    <>
-      <form onSubmit={onSubmit}>
+    <div className="container">
+      <form onSubmit={onSubmit} className="profileForm">
         <input
           onChange={onChange}
           type="text"
           placeholder="Display Name"
           value={newDisplayName}
+          autoFocus
+          className="formInput"
         />
-        <input type="submit" value="Update Profile" />
+        <input
+          type="submit"
+          value="Update Profile"
+          className="formBtn"
+          style={{ marginTop: 10 }}
+        />
       </form>
       <div>
         {myTweets.map((tweet) => (
           <Tweet key={tweet.id} tweetObj={tweet} isOwner={true} />
         ))}
       </div>
-      <button onClick={onLogOutClick}>Log out</button>
-    </>
+      <button onClick={onLogOutClick} className="formBtn cancelBtn logOut">
+        Log out
+      </button>
+    </div>
   );
 };

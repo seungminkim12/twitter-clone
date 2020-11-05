@@ -1,9 +1,12 @@
 import { dbService, storageService } from "fbase";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 function Tweet({ tweetObj, isOwner }) {
   const [editing, setEditing] = useState(false);
   const [newTweet, setNewTweet] = useState(tweetObj.text);
+
   const onDeleteClick = async () => {
     const ok = window.confirm("Are you sure to delete?");
     if (ok) {
@@ -13,6 +16,7 @@ function Tweet({ tweetObj, isOwner }) {
   };
 
   const toggleEditing = () => setEditing((prev) => !prev);
+
   const onSubmit = async (event) => {
     event.preventDefault();
     console.log(tweetObj, newTweet);
@@ -21,43 +25,47 @@ function Tweet({ tweetObj, isOwner }) {
     });
     setEditing(false);
   };
+
   const onChange = (event) => {
     const {
       target: { value },
     } = event;
     setNewTweet(value);
   };
+
   return (
-    <div>
+    <div className="tweet">
       {editing ? (
         <>
-          {isOwner && (
-            <>
-              <form onSubmit={onSubmit}>
-                <input
-                  type="text"
-                  value={newTweet}
-                  required
-                  placeholder="Edit your Tweet!"
-                  onChange={onChange}
-                />
-                <input type="submit" value="Update Tweet" />
-              </form>
-              <button onClick={toggleEditing}>Cancel</button>
-            </>
-          )}
+          <form onSubmit={onSubmit} className="container tweetEdit">
+            <input
+              type="text"
+              value={newTweet}
+              required
+              placeholder="Edit your Tweet!"
+              onChange={onChange}
+              autoFocus
+              className="formInput"
+            />
+            <input type="submit" value="Update Tweet" className="formBtn" />
+          </form>
+          <span onClick={toggleEditing} className="formBtn cancelBtn">
+            Cancel
+          </span>
         </>
       ) : (
         <>
           <h4>{tweetObj.text}</h4>
-          {tweetObj.attachmentURL && (
-            <img src={tweetObj.attachmentURL} width="100px" height="100px" />
-          )}
+          {tweetObj.attachmentURL && <img src={tweetObj.attachmentURL} />}
           {isOwner && (
-            <>
-              <button onClick={onDeleteClick}>Delete Tweet</button>
-              <button onClick={toggleEditing}>Edit Tweet</button>
-            </>
+            <div className="tweet__actions">
+              <span onClick={onDeleteClick}>
+                <FontAwesomeIcon icon={faTrash} />
+              </span>
+              <span onClick={toggleEditing}>
+                <FontAwesomeIcon icon={faPencilAlt} />
+              </span>
+            </div>
           )}
         </>
       )}
